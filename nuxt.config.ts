@@ -2,26 +2,36 @@
 export default defineNuxtConfig({
   // https://nuxt.com/modules
   modules: ['@nuxthub/core', '@nuxt/eslint', '@vueuse/nuxt', '@nuxt/fonts'],
-
   // https://devtools.nuxt.com
   devtools: { enabled: true },
-
   // https://nuxt.com/docs/getting-started/upgrade#testing-nuxt-4
   future: { compatibilityVersion: 4 },
   compatibilityDate: '2025-01-28',
-
   // https://nitro.build/config
   nitro: {
     experimental: {
       websocket: true,
     },
   },
-
   // https://hub.nuxt.com/docs/getting-started/installation#options
   hub: {
+    database: true,
     workers: true,
   },
-
+  typescript: {
+    // Customize app/server TypeScript config
+    tsConfig: {
+      compilerOptions: {
+        strict: true,
+      },
+    },
+    // Customize build-time TypeScript config
+    nodeTsConfig: {
+      compilerOptions: {
+        strict: true,
+      },
+    },
+  },
   // https://eslint.nuxt.com
   eslint: {
     config: {
