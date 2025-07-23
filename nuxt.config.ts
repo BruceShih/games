@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import process from 'node:process'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
@@ -66,5 +67,10 @@ export default defineNuxtConfig({
   },
   auth: {
     webAuthn: true
+  },
+  runtimeConfig: {
+    public: {
+      enableSignup: process.env.ENABLE_SIGNUP === 'true'
+    }
   }
 })
