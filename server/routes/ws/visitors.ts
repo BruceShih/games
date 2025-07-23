@@ -17,5 +17,5 @@ export default defineWebSocketHandler({
       const locations = Array.from(peer.peers.values()).map(peer => getQuery(peer.websocket.url!))
       peer.publish('visitors', JSON.stringify(locations))
     }, 500)
-  },
+  }
 })

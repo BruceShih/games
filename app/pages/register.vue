@@ -5,17 +5,18 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 
 definePageMeta({
-  middleware: 'guest'
+  middleware: ['register']
 })
 
 useHead({
-  title: 'Games'
+  title: 'Register - Games'
 })
 
 const { fetch } = useUserSession()
-const { authenticate } = useWebAuthn()
+const { register } = useWebAuthn()
 const formSchema = toTypedSchema(z.object({
-  email: z.email()
+  email: z.email(),
+  displayName: z.string().min(6).max(50)
 }))
 const form = useForm({
   validationSchema: formSchema
@@ -23,14 +24,19 @@ const form = useForm({
 
 const loading = ref(false)
 
-const onLogin = form.handleSubmit(async (values) => {
+const onSignup = form.handleSubmit(async (values) => {
   if (loading.value)
     return
   loading.value = true
-  await authenticate(values.email)
+
+  await register({
+    userName: values.email,
+    displayName: values.displayName
+  })
     .then(fetch)
     .then(async () => await navigateTo('/games'))
-    .catch(() => toast.error('Login failed'))
+    .catch(_ => toast.error('Register failed'))
+
   loading.value = false
 })
 </script>
@@ -39,12 +45,13 @@ const onLogin = form.handleSubmit(async (values) => {
   <div class="flex justify-center">
     <Card class="w-[400px]">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
+        <CardTitle>Register</CardTitle>
       </CardHeader>
       <CardContent>
         <form
+          id="signup-form"
           class="space-y-6"
-          @submit.prevent="onLogin"
+          @submit.prevent="onSignup"
         >
           <FormField
             v-slot="{ componentField }"
@@ -54,7 +61,21 @@ const onLogin = form.handleSubmit(async (values) => {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  autocomplete="username"
+                  type="text"
+                  v-bind="componentField"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+          <FormField
+            v-slot="{ componentField }"
+            name="displayName"
+          >
+            <FormItem>
+              <FormLabel>Display name</FormLabel>
+              <FormControl>
+                <Input
                   type="text"
                   v-bind="componentField"
                 />
@@ -63,6 +84,7 @@ const onLogin = form.handleSubmit(async (values) => {
             </FormItem>
           </FormField>
           <Button
+            id="signup-button"
             :disabled="loading"
             type="submit"
           >
@@ -72,10 +94,10 @@ const onLogin = form.handleSubmit(async (values) => {
               name="lucide:rotate-cw"
             />
             <template v-if="loading">
-              Logging in...
+              Registering...
             </template>
             <template v-else>
-              Login
+              Register
             </template>
           </Button>
         </form>

@@ -5,7 +5,7 @@ useSeoMeta({
   title: 'Multiplayer Globe with Nuxt',
   description: 'Display website visitor locations in real-time using Nuxt and NuxtHub.',
   ogImage: `${url.origin}/og-image.png`,
-  twitterCard: 'summary_large_image',
+  twitterCard: 'summary_large_image'
 })
 </script>
 
@@ -13,13 +13,16 @@ useSeoMeta({
   <NuxtRouteAnnouncer />
   <NuxtLoadingIndicator />
   <Head>
-    <Link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
+    <Link
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css"
+      rel="stylesheet"
+    />
   </Head>
   <div class="app">
     <a
       class="github-fork-ribbon"
-      href="https://github.com/nuxt-hub/multiplayer-globe"
       data-ribbon="Fork me on GitHub"
+      href="https://github.com/nuxt-hub/multiplayer-globe"
       title="Fork me on GitHub"
     >Fork me on GitHub</a>
     <NuxtPage />
