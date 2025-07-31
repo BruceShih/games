@@ -4,9 +4,9 @@ import { useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
 
-definePageMeta({
-  middleware: ['register']
-})
+// definePageMeta({
+//   middleware: ['register']
+// })
 
 useHead({
   title: 'Register - Games'
