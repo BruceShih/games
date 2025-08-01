@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import createGlobe from 'cobe'
 
 const myLocation = useState('location')
@@ -45,7 +45,7 @@ onMounted(() => {
     }
   })
 })
-</script>
+</script> -->
 
 <template>
   <div class="max-w-4xl mx-auto p-6 space-y-8">
@@ -73,7 +73,7 @@ onMounted(() => {
       </NuxtLink>
     </div>
 
-    <div class="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-10" />
+    <!-- <div class="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-10" />
 
     <h2 class="text-2xl font-bold text-center mb-4">
       Where's everyone at?
@@ -102,6 +102,6 @@ onMounted(() => {
       >
         Cloudflare's multiplayer-globe-template
       </a>.
-    </p>
+    </p> -->
   </div>
 </template>
