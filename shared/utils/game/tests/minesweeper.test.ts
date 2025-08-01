@@ -1,6 +1,6 @@
 import type { MinesweeperGameConfig } from '../minesweeper'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { GameDifficulty, GameState } from '../game'
+import { BaseGameDifficulty, BaseGameState } from '../game'
 import { DIFFICULTY_LEVELS, Minesweeper } from '../minesweeper'
 
 describe('minesweeper', () => {
@@ -12,7 +12,7 @@ describe('minesweeper', () => {
       width: 5,
       height: 5,
       mines: 3,
-      difficulty: GameDifficulty.EASY
+      difficulty: BaseGameDifficulty.EASY
     }
     game = new Minesweeper(config)
   })
@@ -21,7 +21,7 @@ describe('minesweeper', () => {
     it('should initialize with correct configuration', () => {
       expect(game.getDimensions()).toEqual({ width: 5, height: 5 })
       expect(game.getTotalMines()).toBe(3)
-      expect(game.getGameState()).toBe(GameState.IDLE)
+      expect(game.getGameState()).toBe(BaseGameState.IDLE)
       expect(game.getRevealedCells()).toBe(0)
       expect(game.getRemainingMines()).toBe(3)
     })
@@ -84,7 +84,7 @@ describe('minesweeper', () => {
       expect(beginner.width).toBe(9)
       expect(beginner.height).toBe(9)
       expect(beginner.mines).toBe(10)
-      expect(beginner.difficulty).toBe(GameDifficulty.EASY)
+      expect(beginner.difficulty).toBe(BaseGameDifficulty.EASY)
     })
 
     it('should have correct INTERMEDIATE configuration', () => {
@@ -92,7 +92,7 @@ describe('minesweeper', () => {
       expect(intermediate.width).toBe(16)
       expect(intermediate.height).toBe(16)
       expect(intermediate.mines).toBe(40)
-      expect(intermediate.difficulty).toBe(GameDifficulty.MEDIUM)
+      expect(intermediate.difficulty).toBe(BaseGameDifficulty.MEDIUM)
     })
 
     it('should have correct EXPERT configuration', () => {
@@ -100,18 +100,18 @@ describe('minesweeper', () => {
       expect(expert.width).toBe(30)
       expect(expert.height).toBe(16)
       expect(expert.mines).toBe(99)
-      expect(expert.difficulty).toBe(GameDifficulty.HARD)
+      expect(expert.difficulty).toBe(BaseGameDifficulty.HARD)
     })
   })
 
   describe('game state management', () => {
     it('should start in IDLE state', () => {
-      expect(game.getGameState()).toBe(GameState.IDLE)
+      expect(game.getGameState()).toBe(BaseGameState.IDLE)
     })
 
     it('should transition to PLAYING when started', () => {
       game.start()
-      expect(game.getGameState()).toBe(GameState.PLAYING)
+      expect(game.getGameState()).toBe(BaseGameState.PLAYING)
     })
 
     it('should not allow moves when not playing', () => {
@@ -210,7 +210,7 @@ describe('minesweeper', () => {
         width: 3,
         height: 3,
         mines: 1,
-        difficulty: GameDifficulty.EASY
+        difficulty: BaseGameDifficulty.EASY
       }
       const testGame = new Minesweeper(testConfig)
 
@@ -252,7 +252,7 @@ describe('minesweeper', () => {
 
       if (mineRow !== -1 && mineCol !== -1) {
         game.revealCell(mineRow, mineCol)
-        expect(game.getGameState()).toBe(GameState.LOST)
+        expect(game.getGameState()).toBe(BaseGameState.LOST)
       }
     })
 
@@ -262,7 +262,7 @@ describe('minesweeper', () => {
         width: 2,
         height: 2,
         mines: 1,
-        difficulty: GameDifficulty.EASY
+        difficulty: BaseGameDifficulty.EASY
       }
       const smallGame = new Minesweeper(smallConfig)
       smallGame.start()
@@ -278,7 +278,7 @@ describe('minesweeper', () => {
         }
       }
 
-      expect(smallGame.getGameState()).toBe(GameState.WON)
+      expect(smallGame.getGameState()).toBe(BaseGameState.WON)
     })
   })
 
@@ -354,7 +354,7 @@ describe('minesweeper', () => {
 
       game.reset()
 
-      expect(game.getGameState()).toBe(GameState.IDLE)
+      expect(game.getGameState()).toBe(BaseGameState.IDLE)
       expect(game.getRevealedCells()).toBe(0)
       expect(game.getRemainingMines()).toBe(3)
 
@@ -372,7 +372,7 @@ describe('minesweeper', () => {
         width: 10,
         height: 10,
         mines: 15,
-        difficulty: GameDifficulty.MEDIUM
+        difficulty: BaseGameDifficulty.MEDIUM
       }
 
       game.reset(newConfig)
@@ -398,7 +398,7 @@ describe('minesweeper', () => {
       expect(gameData).toHaveProperty('totalMines')
 
       expect(gameData.board).toHaveLength(5)
-      expect(gameData.gameState).toBe(GameState.PLAYING)
+      expect(gameData.gameState).toBe(BaseGameState.PLAYING)
       expect(gameData.remainingMines).toBe(3)
       expect(gameData.dimensions).toEqual({ width: 5, height: 5 })
       expect(gameData.totalMines).toBe(3)

@@ -1,5 +1,5 @@
-import type { GameConfig as BaseGameConfig } from './game'
-import { Game, GameDifficulty, GameState } from './game'
+import type { BaseGameConfig } from './game'
+import { BaseGameDifficulty, BaseGameState, IBaseGame } from './game'
 
 export interface Cell {
   isMine: boolean
@@ -14,7 +14,7 @@ export interface MinesweeperGameConfig extends BaseGameConfig {
   mines: number
 }
 
-export class Minesweeper extends Game {
+export class Minesweeper extends IBaseGame {
   private board: Cell[][]
   private width: number
   private height: number
@@ -148,7 +148,7 @@ export class Minesweeper extends Game {
     incrementMove: boolean,
     enableFirstClickProtection: boolean = false
   ): boolean {
-    if (this.gameState !== GameState.PLAYING) {
+    if (this.gameState !== BaseGameState.PLAYING) {
       return false
     }
 
@@ -206,7 +206,7 @@ export class Minesweeper extends Game {
   }
 
   public toggleFlag(row: number, col: number): boolean {
-    if (this.gameState !== GameState.PLAYING) {
+    if (this.gameState !== BaseGameState.PLAYING) {
       return false
     }
 
@@ -270,7 +270,7 @@ export class Minesweeper extends Game {
     return this.board.map(row => row.map(cell => ({ ...cell })))
   }
 
-  public override getGameState(): GameState {
+  public override getGameState(): BaseGameState {
     return this.gameState
   }
 
@@ -298,7 +298,7 @@ export class Minesweeper extends Game {
       this.config = config
     }
 
-    this.gameState = GameState.IDLE
+    this.gameState = BaseGameState.IDLE
     this.revealedCells = 0
     this.flaggedCells = 0
     this.moveCount = 0
@@ -340,11 +340,11 @@ export class Minesweeper extends Game {
 
   // Abstract method implementations required by Game class
   public start(): void {
-    if (this.gameState === GameState.PLAYING) {
+    if (this.gameState === BaseGameState.PLAYING) {
       return // Already started
     }
 
-    this.gameState = GameState.PLAYING
+    this.gameState = BaseGameState.PLAYING
     this.startTime = new Date()
     this.notifyObservers({
       type: 'game-started',
@@ -364,7 +364,7 @@ export class Minesweeper extends Game {
   }
 
   public isValidMove(move: { action: 'reveal' | 'flag', row: number, col: number }): boolean {
-    if (this.gameState !== GameState.PLAYING) {
+    if (this.gameState !== BaseGameState.PLAYING) {
       return false
     }
 
@@ -388,7 +388,7 @@ export class Minesweeper extends Game {
 
   public getGameData(): {
     board: Cell[][]
-    gameState: GameState
+    gameState: BaseGameState
     remainingMines: number
     revealedCells: number
     dimensions: { width: number, height: number }
@@ -431,9 +431,9 @@ export class Minesweeper extends Game {
 
 // Predefined difficulty levels
 export const DIFFICULTY_LEVELS = {
-  BEGINNER: { width: 9, height: 9, mines: 10, difficulty: GameDifficulty.EASY },
-  INTERMEDIATE: { width: 16, height: 16, mines: 40, difficulty: GameDifficulty.MEDIUM },
-  EXPERT: { width: 30, height: 16, mines: 99, difficulty: GameDifficulty.HARD }
+  BEGINNER: { width: 9, height: 9, mines: 10, difficulty: BaseGameDifficulty.EASY },
+  INTERMEDIATE: { width: 16, height: 16, mines: 40, difficulty: BaseGameDifficulty.MEDIUM },
+  EXPERT: { width: 30, height: 16, mines: 99, difficulty: BaseGameDifficulty.HARD }
 } as const satisfies Record<string, MinesweeperGameConfig>
 
 // Example usage:

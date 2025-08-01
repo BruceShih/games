@@ -1,4 +1,4 @@
-export enum GameState {
+export enum BaseGameState {
   IDLE = 'idle',
   PLAYING = 'playing',
   PAUSED = 'paused',
@@ -7,19 +7,19 @@ export enum GameState {
   DRAW = 'draw'
 }
 
-export enum GameDifficulty {
+export enum BaseGameDifficulty {
   EASY = 'easy',
   MEDIUM = 'medium',
   HARD = 'hard',
   CUSTOM = 'custom'
 }
 
-export interface GameConfig {
-  difficulty: GameDifficulty
+export interface BaseGameConfig {
+  difficulty: BaseGameDifficulty
   [key: string]: unknown
 }
 
-export interface GameStats {
+export interface BaseGameStats {
   gamesPlayed: number
   gamesWon: number
   gamesLost: number
@@ -31,26 +31,26 @@ export interface GameStats {
   bestStreak: number
 }
 
-export interface GameScore {
+export interface BaseGameScore {
   score: number
   moves: number
   timeElapsed: number
-  difficulty: GameDifficulty
+  difficulty: BaseGameDifficulty
   timestamp: Date
 }
 
-export abstract class Game {
-  protected gameState: GameState
-  protected config: GameConfig
+export abstract class IBaseGame {
+  protected gameState: BaseGameState
+  protected config: BaseGameConfig
   protected startTime: Date | null
   protected endTime: Date | null
   protected moveCount: number
   protected score: number
-  protected stats: GameStats
+  protected stats: BaseGameStats
   protected observers: Array<(event: GameEvent) => void>
 
-  constructor(config: GameConfig) {
-    this.gameState = GameState.IDLE
+  constructor(config: BaseGameConfig) {
+    this.gameState = BaseGameState.IDLE
     this.config = config
     this.startTime = null
     this.endTime = null
@@ -62,16 +62,16 @@ export abstract class Game {
 
   // Abstract methods that must be implemented by concrete games
   abstract start(): void
-  abstract reset(config?: GameConfig): void
+  abstract reset(config?: BaseGameConfig): void
   abstract makeMove(move: unknown): boolean
   abstract isValidMove(move: unknown): boolean
   abstract getGameData(): unknown
-  abstract clone(): Game
+  abstract clone(): IBaseGame
 
   // Common game lifecycle methods
   public pause(): void {
-    if (this.gameState === GameState.PLAYING) {
-      this.gameState = GameState.PAUSED
+    if (this.gameState === BaseGameState.PLAYING) {
+      this.gameState = BaseGameState.PAUSED
       this.notifyObservers({
         type: 'game-paused',
         timestamp: new Date(),
@@ -81,8 +81,8 @@ export abstract class Game {
   }
 
   public resume(): void {
-    if (this.gameState === GameState.PAUSED) {
-      this.gameState = GameState.PLAYING
+    if (this.gameState === BaseGameState.PAUSED) {
+      this.gameState = BaseGameState.PLAYING
       this.notifyObservers({
         type: 'game-resumed',
         timestamp: new Date(),
@@ -92,8 +92,8 @@ export abstract class Game {
   }
 
   public quit(): void {
-    if (this.gameState === GameState.PLAYING || this.gameState === GameState.PAUSED) {
-      this.gameState = GameState.IDLE
+    if (this.gameState === BaseGameState.PLAYING || this.gameState === BaseGameState.PAUSED) {
+      this.gameState = BaseGameState.IDLE
       this.endTime = new Date()
       this.notifyObservers({
         type: 'game-quit',
@@ -104,18 +104,18 @@ export abstract class Game {
   }
 
   // Game state methods
-  public getGameState(): GameState {
+  public getGameState(): BaseGameState {
     return this.gameState
   }
 
   public isGameActive(): boolean {
-    return this.gameState === GameState.PLAYING || this.gameState === GameState.PAUSED
+    return this.gameState === BaseGameState.PLAYING || this.gameState === BaseGameState.PAUSED
   }
 
   public isGameFinished(): boolean {
-    return this.gameState === GameState.WON
-      || this.gameState === GameState.LOST
-      || this.gameState === GameState.DRAW
+    return this.gameState === BaseGameState.WON
+      || this.gameState === BaseGameState.LOST
+      || this.gameState === BaseGameState.DRAW
   }
 
   // Time tracking methods
@@ -169,11 +169,11 @@ export abstract class Game {
 
   // Game completion methods
   protected gameWon(): void {
-    this.gameState = GameState.WON
+    this.gameState = BaseGameState.WON
     this.endTime = new Date()
     this.updateStats('won')
 
-    const gameScore: GameScore = {
+    const gameScore: BaseGameScore = {
       score: this.score,
       moves: this.moveCount,
       timeElapsed: this.getElapsedTime(),
@@ -190,7 +190,7 @@ export abstract class Game {
   }
 
   protected gameLost(): void {
-    this.gameState = GameState.LOST
+    this.gameState = BaseGameState.LOST
     this.endTime = new Date()
     this.updateStats('lost')
 
@@ -202,7 +202,7 @@ export abstract class Game {
   }
 
   protected gameDraw(): void {
-    this.gameState = GameState.DRAW
+    this.gameState = BaseGameState.DRAW
     this.endTime = new Date()
     this.updateStats('draw')
 
@@ -214,11 +214,11 @@ export abstract class Game {
   }
 
   // Statistics methods
-  public getStats(): GameStats {
+  public getStats(): BaseGameStats {
     return { ...this.stats }
   }
 
-  private initializeStats(): GameStats {
+  private initializeStats(): BaseGameStats {
     return {
       gamesPlayed: 0,
       gamesWon: 0,
@@ -270,11 +270,11 @@ export abstract class Game {
   }
 
   // Configuration methods
-  public getConfig(): GameConfig {
+  public getConfig(): BaseGameConfig {
     return { ...this.config }
   }
 
-  public updateConfig(newConfig: Partial<GameConfig>): void {
+  public updateConfig(newConfig: Partial<BaseGameConfig>): void {
     this.config = { ...this.config, ...newConfig }
     this.notifyObservers({
       type: 'config-updated',
@@ -372,12 +372,12 @@ export interface GameEvent {
     | 'game-won' | 'game-lost' | 'game-draw' | 'move-made'
     | 'score-updated' | 'config-updated'
   timestamp: Date
-  gameState?: GameState
+  gameState?: BaseGameState
   moveCount?: number
   score?: number
   points?: number
-  config?: GameConfig
-  gameScore?: GameScore
+  config?: BaseGameConfig
+  gameScore?: BaseGameScore
 }
 
 // Utility functions for common game operations

@@ -1,7 +1,7 @@
-import type { Cell, MinesweeperGameConfig } from '../../shared/modules/game/minesweeper'
+import type { Cell, MinesweeperGameConfig } from '#shared/utils/game/minesweeper'
+import { BaseGameState } from '#shared/utils/game/game'
+import { DIFFICULTY_LEVELS, Minesweeper } from '#shared/utils/game/minesweeper'
 import { computed, readonly, ref } from 'vue'
-import { GameState } from '../../shared/modules/game/game'
-import { DIFFICULTY_LEVELS, Minesweeper } from '../../shared/modules/game/minesweeper'
 
 export interface MinesweeperMove {
   action: 'reveal' | 'flag'
@@ -17,7 +17,7 @@ export function useMinesweeper(initialConfig: MinesweeperGameConfig = DIFFICULTY
   const game = new Minesweeper(initialConfig)
 
   // Reactive state that syncs with the game instance
-  const gameState = ref<GameState>(game.getGameState())
+  const gameState = ref<BaseGameState>(game.getGameState())
   const board = ref<Cell[][]>(game.getBoard())
   const revealedCells = ref(game.getRevealedCells())
   const flaggedCells = ref(game.getRemainingMines())
@@ -39,9 +39,9 @@ export function useMinesweeper(initialConfig: MinesweeperGameConfig = DIFFICULTY
   const height = computed(() => game.getDimensions().height)
   const totalMines = computed(() => game.getTotalMines())
   const remainingMines = computed(() => game.getRemainingMines())
-  const isPlaying = computed(() => gameState.value === GameState.PLAYING)
+  const isPlaying = computed(() => gameState.value === BaseGameState.PLAYING)
   const isGameOver = computed(() =>
-    gameState.value === GameState.WON || gameState.value === GameState.LOST
+    gameState.value === BaseGameState.WON || gameState.value === BaseGameState.LOST
   )
   const gameTime = computed(() => {
     return Math.floor(game.getElapsedTime() / 1000)
